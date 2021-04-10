@@ -1,20 +1,19 @@
 import 'package:blocbeginner/logic/cubits/cubits.dart';
-import 'package:blocbeginner/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatefulWidget {
+class ThirdScreen extends StatefulWidget {
   final String title;
   final Color color;
 
-  const HomeScreen({Key key, @required this.title, @required this.color})
+  const ThirdScreen({Key key, @required this.title, @required this.color})
       : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _ThirdScreenState createState() => _ThirdScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ThirdScreenState extends State<ThirdScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,17 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             MaterialButton(
               color: widget.color,
+              onPressed: () {},
               child: Text('Go to Second Screen'),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/second');
-              },
-            ),
-            MaterialButton(
-              color: widget.color,
-              child: Text('Go to Third Screen'),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/third');
-              },
             ),
           ],
         ),

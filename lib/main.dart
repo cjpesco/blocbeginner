@@ -7,23 +7,51 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
   @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final CounterCubit _counterCubit = CounterCubit();
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider<CounterCubit>(
-      create: (context) => CounterCubit(),
-      child: MaterialApp(
-        title: 'Counter Cubit Bloc',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: Colors.blue,
-        ),
-        home: HomeScreen(
-          title: 'Home Screen',
-          color: Colors.blueAccent,
-        ),
+    return MaterialApp(
+      title: 'Counter Cubit Bloc',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.blue,
       ),
+      routes: {
+        '/': (context) => BlocProvider.value(
+              value: _counterCubit,
+              child: HomeScreen(
+                title: 'Home',
+                color: Colors.blueAccent,
+              ),
+            ),
+        '/second': (context) => BlocProvider.value(
+              value: _counterCubit,
+              child: SecondScreen(
+                title: 'Second',
+                color: Colors.redAccent,
+              ),
+            ),
+        '/third': (context) => BlocProvider.value(
+              value: _counterCubit,
+              child: ThirdScreen(
+                title: 'Third',
+                color: Colors.purpleAccent,
+              ),
+            ),
+      },
     );
+  }
+
+  @override
+  void dispose() {
+    _counterCubit.close();
+    super.dispose();
   }
 }
