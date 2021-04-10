@@ -10,6 +10,18 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key, @required this.title, @required this.color})
       : super(key: key);
 
+  static const String routeName = '/';
+
+  static Route route() {
+    return MaterialPageRoute(
+      settings: const RouteSettings(name: routeName),
+      builder: (_) => HomeScreen(
+        title: 'Home',
+        color: Colors.blueAccent,
+      ),
+    );
+  }
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

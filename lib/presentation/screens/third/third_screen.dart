@@ -9,6 +9,18 @@ class ThirdScreen extends StatefulWidget {
   const ThirdScreen({Key key, @required this.title, @required this.color})
       : super(key: key);
 
+  static const String routeName = '/third';
+
+  static Route route() {
+    return MaterialPageRoute(
+      settings: const RouteSettings(name: routeName),
+      builder: (_) => ThirdScreen(
+        title: 'Third',
+        color: Colors.purpleAccent,
+      ),
+    );
+  }
+
   @override
   _ThirdScreenState createState() => _ThirdScreenState();
 }

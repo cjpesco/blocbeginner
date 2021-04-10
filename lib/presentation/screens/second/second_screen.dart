@@ -9,6 +9,18 @@ class SecondScreen extends StatefulWidget {
   const SecondScreen({Key key, @required this.title, @required this.color})
       : super(key: key);
 
+  static const String routeName = '/second';
+
+  static Route route() {
+    return MaterialPageRoute(
+      settings: const RouteSettings(name: routeName),
+      builder: (_) => SecondScreen(
+        title: 'Second',
+        color: Colors.redAccent,
+      ),
+    );
+  }
+
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
