@@ -1,8 +1,20 @@
-import 'package:blocbeginner/cubits/cubits.dart';
+import 'package:blocbeginner/logic/cubits/cubits.dart';
+import 'package:blocbeginner/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  final String title;
+  final Color color;
+
+  const HomeScreen({Key key, @required this.title, @required this.color})
+      : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +92,24 @@ class HomeScreen extends StatelessWidget {
                       BlocProvider.of<CounterCubit>(context).increment();
                     }),
               ],
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            MaterialButton(
+              color: widget.color,
+              child: Text('Go to Second Screen'),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<CounterCubit>(context),
+                      child: SecondScreen(
+                          title: 'Second Screen', color: Colors.redAccent),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

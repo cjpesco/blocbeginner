@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:blocbeginner/cubits/cubits.dart';
+import 'package:blocbeginner/logic/cubits/cubits.dart';
+
 import 'package:test/test.dart';
 
 void main() {
