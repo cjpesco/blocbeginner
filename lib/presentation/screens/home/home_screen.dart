@@ -29,127 +29,139 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Counter Cubit'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BlocBuilder<InternetCubit, InternetState>(
-              builder: (context, state) {
-                if (state is InternetConnected &&
-                    state.connectionType == ConnectionType.Wifi) {
-                  return Text(
-                    'Wi-Fi',
-                    style: Theme.of(context).textTheme.headline3.copyWith(
-                          color: Colors.green,
+  Widget build(BuildContext homeScreenContext) {
+    return BlocListener<InternetCubit, InternetState>(
+        listener: (internetCubitListenerContext, state) {
+          if (state is InternetConnected &&
+              state.connectionType == ConnectionType.Wifi) {
+            context.read<CounterCubit>().increment();
+          } else if (state is InternetConnected &&
+              state.connectionType == ConnectionType.Mobile) {
+            context.read<CounterCubit>().decrement();
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Counter Cubit'),
+            centerTitle: true,
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                BlocBuilder<InternetCubit, InternetState>(
+                  builder: (internetCubitBuilderContext, state) {
+                    if (state is InternetConnected &&
+                        state.connectionType == ConnectionType.Wifi) {
+                      return Text(
+                        'Wi-Fi',
+                        style: Theme.of(context).textTheme.headline3.copyWith(
+                              color: Colors.green,
+                            ),
+                      );
+                    } else if (state is InternetConnected &&
+                        state.connectionType == ConnectionType.Mobile) {
+                      return Text(
+                        'Mobile',
+                        style: Theme.of(context).textTheme.headline3.copyWith(
+                              color: Colors.red,
+                            ),
+                      );
+                    } else if (state is InternetDisconnected) {
+                      return Text(
+                        'Disconnected',
+                        style: Theme.of(context).textTheme.headline3.copyWith(
+                              color: Colors.grey,
+                            ),
+                      );
+                    }
+                    return CircularProgressIndicator();
+                  },
+                ),
+                Divider(
+                  height: 5.0,
+                ),
+                BlocConsumer<CounterCubit, CounterState>(
+                  listener: (context, state) {
+                    if (state.status == CounterStatus.increment) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Text('Incremented!'),
+                          duration: Duration(milliseconds: 300),
                         ),
-                  );
-                } else if (state is InternetConnected &&
-                    state.connectionType == ConnectionType.Mobile) {
-                  return Text(
-                    'Mobile',
-                    style: Theme.of(context).textTheme.headline3.copyWith(
-                          color: Colors.red,
+                      );
+                    } else if (state.status == CounterStatus.decrement) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text('Decremented!'),
+                          duration: Duration(milliseconds: 300),
                         ),
-                  );
-                } else if (state is InternetDisconnected) {
-                  return Text(
-                    'Disconnected',
-                    style: Theme.of(context).textTheme.headline3.copyWith(
-                          color: Colors.grey,
-                        ),
-                  );
-                }
-                return CircularProgressIndicator();
-              },
-            ),
-            Divider(
-              height: 5.0,
-            ),
-            BlocConsumer<CounterCubit, CounterState>(
-              listener: (context, state) {
-                if (state.status == CounterStatus.increment) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.green,
-                      content: Text('Incremented!'),
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  );
-                } else if (state.status == CounterStatus.decrement) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.red,
-                      content: Text('Decremented!'),
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  );
-                }
-              },
-              builder: (context, state) {
-                String messageState;
-                if (state.counterValue < 0) {
-                  messageState = 'YAY NEGATIVE';
-                } else if (state.counterValue % 2 == 0) {
-                  messageState = 'YAYY ';
-                } else if (state.counterValue == 5) {
-                  messageState = 'HMMM NUMBER';
-                } else if (state.counterValue < 0) {
-                  messageState = 'YAY NEGATIVE';
-                } else {
-                  messageState = '';
-                }
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    String messageState;
+                    if (state.counterValue < 0) {
+                      messageState = 'YAY NEGATIVE';
+                    } else if (state.counterValue % 2 == 0) {
+                      messageState = 'YAYY ';
+                    } else if (state.counterValue == 5) {
+                      messageState = 'HMMM NUMBER';
+                    } else if (state.counterValue < 0) {
+                      messageState = 'YAY NEGATIVE';
+                    } else {
+                      messageState = '';
+                    }
 
-                return Text(
-                  '$messageState  ${state.counterValue}',
-                  style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 50.0,
-                    fontWeight: FontWeight.w600,
+                    return Text(
+                      '$messageState  ${state.counterValue}',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: () {
+                          BlocProvider.of<CounterCubit>(context).decrement();
+                        }),
+                    IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          BlocProvider.of<CounterCubit>(context).increment();
+                        }),
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Builder(
+                  builder: (builderContext) => MaterialButton(
+                    color: widget.color,
+                    child: Text('Go to Second Screen'),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/second');
+                    },
                   ),
-                );
-              },
+                ),
+                MaterialButton(
+                  color: widget.color,
+                  child: Text('Go to Third Screen'),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/third');
+                  },
+                ),
+              ],
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     IconButton(
-            //         icon: Icon(Icons.remove),
-            //         onPressed: () {
-            //           BlocProvider.of<CounterCubit>(context).decrement();
-            //         }),
-            //     IconButton(
-            //         icon: Icon(Icons.add),
-            //         onPressed: () {
-            //           BlocProvider.of<CounterCubit>(context).increment();
-            //         }),
-            //   ],
-            // ),
-            // SizedBox(
-            //   height: 10.0,
-            // ),
-            // MaterialButton(
-            //   color: widget.color,
-            //   child: Text('Go to Second Screen'),
-            //   onPressed: () {
-            //     Navigator.of(context).pushNamed('/second');
-            //   },
-            // ),
-            // MaterialButton(
-            //   color: widget.color,
-            //   child: Text('Go to Third Screen'),
-            //   onPressed: () {
-            //     Navigator.of(context).pushNamed('/third');
-            //   },
-            // ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
